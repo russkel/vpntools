@@ -20,7 +20,7 @@ def fix_conf(ovpn):
     return ovpn
 
 modtime = mod_time()
-subprocess.run("curl -z openvpn.zip https://www.privateinternetaccess.com/openvpn/openvpn.zip", shell=True)
+subprocess.run("curl -z openvpn.zip https://www.privateinternetaccess.com/openvpn/openvpn.zip -o openvpn.zip", shell=True)
 
 if modtime == mod_time():
     # file is intact, do nothing
