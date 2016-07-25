@@ -8,7 +8,7 @@ def mod_time():
     try:
         statinfo = os.stat("openvpn.zip")
         return statinfo.st_mtime
-    catch FileNotFoundError:
+    except FileNotFoundError:
         return None
 
 
