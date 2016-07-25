@@ -5,8 +5,11 @@ import zipfile
 
 
 def mod_time():
-    statinfo = os.stat("openvpn.zip")
-    return statinfo.st_mtime
+    try:
+        statinfo = os.stat("openvpn.zip")
+        return statinfo.st_mtime
+    catch FileNotFoundError:
+        return None
 
 
 def fix_conf(ovpn):
@@ -27,7 +30,8 @@ if modtime == mod_time():
     print("No new files.")
     sys.exit()
 
-subprocess.run("rm confs/*", shell=True)
+subprocess.run("mkdir -p confs", shell=True)
+subprocess.run("rm -f confs/*", shell=True)
 
 with zipfile.ZipFile("openvpn.zip") as zf:
     for fn in zf.namelist():
