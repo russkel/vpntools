@@ -46,4 +46,4 @@ with zipfile.ZipFile("openvpn.zip") as zf:
             zf.extract(fn, "confs/")
 
 print("Installing configuration files")
-subprocess.run("sudo cp confs/* /etc/openvpn/", shell=True)
+subprocess.run("sudo cp confs/* /etc/openvpn/clients/", shell=True)
