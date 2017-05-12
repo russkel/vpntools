@@ -69,4 +69,5 @@ for name, (hostname, port) in servers.items():
 
 if args.install:
     print("Installing configuration files")
-    subprocess.run("sudo cp confs/* /etc/openvpn/clients/", shell=True)
+    subprocess.run("sudo cp confs/* /etc/openvpn/client/", shell=True)
+
