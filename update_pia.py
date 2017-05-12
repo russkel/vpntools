@@ -9,6 +9,8 @@ from string import Template
 parser = argparse.ArgumentParser(description='Obtain PIA VPNs and write config files.')
 parser.add_argument('--refresh', action='store_true', default=False,
                     help='Write the config files ignoring checks for new file.')
+parser.add_argument('--tough', action='store_true', default=False,
+                    help='Use the "tough" configuration.')
 parser.add_argument('--install', action='store_true', default=False,
                     help='Install the configuration files into the system.')
 args = parser.parse_args()
@@ -28,12 +30,18 @@ def extract_uri(ovpn):
 
     return (None, None)
 
+if args.tough:
+    zip_filename = "openvpn-strong-tcp.zip"
+    template_filename = "template-tough.conf"
+else:
+    zip_filename = "openvpn.zip"
+    template_filename = "template.conf"
 
 if args.refresh:
-    subprocess.run("rm -f openvpn.zip", shell=True)
+    subprocess.run("rm -f {}".format(zip_filename), shell=True)
 
 modtime = mod_time()
-subprocess.run("curl -z openvpn.zip https://www.privateinternetaccess.com/openvpn/openvpn-strong-tcp.zip -o openvpn.zip", shell=True)
+subprocess.run("curl -z {0} https://www.privateinternetaccess.com/openvpn/{0} -o {0}".format(zip_filename), shell=True)
 
 if modtime == mod_time() and not args.refresh:
     # file is intact, do nothing
@@ -62,7 +70,7 @@ with zipfile.ZipFile("openvpn.zip") as zf:
 with open('pia_hosts.json', "w") as out:
     json.dump(servers, out)
 
-conf_file = Template("".join(open("template.conf", "r").readlines()))
+conf_file = Template("".join(open(template_filename, "r").readlines()))
 
 for name, (hostname, port) in servers.items():
     new_fn = "confs/{}.conf".format(name.replace(' ', '_'))
@@ -74,4 +82,3 @@ for name, (hostname, port) in servers.items():
 if args.install:
     print("Installing configuration files")
     subprocess.run("sudo cp confs/* /etc/openvpn/client/", shell=True)
-
