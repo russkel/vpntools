@@ -28,6 +28,10 @@ def extract_uri(ovpn):
 
     return (None, None)
 
+
+if args.refresh:
+    subprocess.run("rm -f openvpn.zip", shell=True)
+
 modtime = mod_time()
 subprocess.run("curl -z openvpn.zip https://www.privateinternetaccess.com/openvpn/openvpn-strong-tcp.zip -o openvpn.zip", shell=True)
 
