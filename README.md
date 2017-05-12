@@ -11,5 +11,5 @@ To use:
   pacman -S openvpn openresolv
   mkdir confs
   python3 update_pia.py --install
-  sudo systemctl start openvpn@Brazil
+  sudo systemctl start openvpn-client@Brazil
 ```
