@@ -2,7 +2,7 @@
 Simple scripts to assist PIA VPN usage
 
 ## update_pia.py
-Downloads the OpenVPN configuration files from PIA and extracts the hostnames and ports. It then creates configuration files based on a provided template (derived from the TCP tough PIA configuration) incorporating an auth file and systemd-resolved support.
+Downloads the OpenVPN configuration files from PIA and extracts the hostnames and ports. It then creates configuration files based on a provided template (derived from the TCP tough PIA configuration) incorporating an auth file and [systemd-resolved support](https://github.com/jonathanio/update-systemd-resolved) (using the [AUR](https://aur.archlinux.org/packages/openvpn-update-systemd-resolved/) package).
 
 You should put your credentials in `pia-auth` in the OpenVPN client configuration folder, which should be suitably restricted.
 
