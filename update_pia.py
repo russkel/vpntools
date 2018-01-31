@@ -15,9 +15,17 @@ parser.add_argument('--install', action='store_true', default=False,
                     help='Install the configuration files into the system.')
 args = parser.parse_args()
 
+if args.tough:
+    zip_filename = "openvpn-strong-tcp.zip"
+    template_filename = "template-tough.conf"
+else:
+    zip_filename = "openvpn.zip"
+    template_filename = "template.conf"
+
+
 def mod_time():
     try:
-        statinfo = os.stat("openvpn.zip")
+        statinfo = os.stat(zip_filename)
         return statinfo.st_mtime
     except FileNotFoundError:
         return None
@@ -29,13 +37,6 @@ def extract_uri(ovpn):
             return line.strip().split()[1:3]
 
     return (None, None)
-
-if args.tough:
-    zip_filename = "openvpn-strong-tcp.zip"
-    template_filename = "template-tough.conf"
-else:
-    zip_filename = "openvpn.zip"
-    template_filename = "template.conf"
 
 if args.refresh:
     subprocess.run("rm -f {}".format(zip_filename), shell=True)
@@ -53,7 +54,7 @@ subprocess.run("rm -f confs/*", shell=True)
 
 servers = {}
 
-with zipfile.ZipFile("openvpn.zip") as zf:
+with zipfile.ZipFile(zip_filename) as zf:
     for fn in zf.namelist():
         if fn.endswith(".ovpn"):
             name, ext = os.path.splitext(fn)
@@ -73,7 +74,7 @@ with open('pia_hosts.json', "w") as out:
 conf_file = Template("".join(open(template_filename, "r").readlines()))
 
 for name, (hostname, port) in servers.items():
-    new_fn = "confs/{}.conf".format(name.replace(' ', '_'))
+    new_fn = "confs/PIA-{}.conf".format(name.replace(' ', '_'))
     print("Writing {}".format(new_fn))
 
     with open(new_fn, "w") as out:

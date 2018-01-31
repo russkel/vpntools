@@ -1,15 +1,23 @@
 # vpntools
-Simple scripts to assist VPN usage
+Simple scripts to assist PIA VPN usage
 
 ## update_pia.py
-Downloads the OpenVPN configuration files from PIA and extracts the hostnames and ports. It then creates configuration files based on a provided template (derived from the TCP tough PIA configuration) incorporating an auth file and openresolv support.
+Downloads the OpenVPN configuration files from PIA and extracts the hostnames and ports. It then creates configuration files based on a provided template (derived from the TCP tough PIA configuration) incorporating an auth file and systemd-resolved support.
 
-You should put your credentials in `pia/pia-auth.conf` in the OpenVPN client configuration folder, which should be suitably restricted.
+You should put your credentials in `pia-auth` in the OpenVPN client configuration folder, which should be suitably restricted.
 
-To use:
+To install and setup:
 ```sh
-  pacman -S openvpn openresolv
-  mkdir confs
+  pacman -S openvpn
+  pacaur -S openvpn-update-systemd-resolved
+  systemctl enable systemd-resolved.service
+  systemctl start systemd-resolved.service
   python3 update_pia.py --install
-  sudo systemctl start openvpn-client@Brazil
+  sudo echo $'YOUR_USERNAME\nYOUR_PASSWORD' > /etc/openvpn/client/pia-auth
+  sudo chmod 600 /etc/openvpn/client/pia-auth
+```
+
+Done, now connect to the VPN:
+```sh
+  sudo systemctl start openvpn-client@PIA-Brazil
 ```
