@@ -18,9 +18,13 @@ args = parser.parse_args()
 if args.tough:
     zip_filename = "openvpn-strong-tcp.zip"
     template_filename = "template-tough.conf"
+    hosts_json = "pia_hosts-tough-tcp.json"
+    suffix = "-tough"
 else:
     zip_filename = "openvpn.zip"
     template_filename = "template.conf"
+    hosts_json = "pia_hosts-udp.json"
+    suffix = ""
 
 
 def mod_time():
@@ -68,18 +72,18 @@ with zipfile.ZipFile(zip_filename) as zf:
         elif fn.endswith('.crt') or fn.endswith('.pem'):
             zf.extract(fn, "confs/")
 
-with open('pia_hosts.json', "w") as out:
+with open(hosts_json, "w") as out:
     json.dump(servers, out)
 
 conf_file = Template("".join(open(template_filename, "r").readlines()))
 
 for name, (hostname, port) in servers.items():
-    new_fn = "confs/PIA-{}.conf".format(name.replace(' ', '_'))
-    print("Writing {}".format(new_fn))
+    new_fn = f"confs/PIA-{name.replace(' ', '_')}{suffix}.conf"
+    print(f"Writing {new_fn}...")
 
     with open(new_fn, "w") as out:
         out.write(conf_file.substitute(hostname=hostname, port=port))
 
 if args.install:
-    print("Installing configuration files")
+    print("Installing configuration files...")
     subprocess.run("sudo cp confs/* /etc/openvpn/client/", shell=True)

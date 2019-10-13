@@ -8,7 +8,7 @@ You should put your credentials in `pia-auth` in the OpenVPN client configuratio
 
 To install and setup:
 ```sh
-  pacman -S openvpn
+  sudo pacman -S openvpn
   pacaur -S openvpn-update-systemd-resolved
   systemctl enable systemd-resolved.service
   systemctl start systemd-resolved.service
